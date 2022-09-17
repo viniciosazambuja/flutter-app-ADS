@@ -43,7 +43,7 @@ Widget Menu(BuildContext context)
               },
             ),
             ListTile(
-              title: const Text('Calculadora'),
+              title: const Text('Calculadora Simples'),
               onTap: () {
                 Navigator.push(
                     context,
