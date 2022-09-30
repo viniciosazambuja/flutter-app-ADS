@@ -124,6 +124,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
               TextField(
                   textAlign: TextAlign.center,
                   controller: _inputControllerNum,
+                  keyboardType: TextInputType.number,
                   style: TextStyle(fontSize: 16)),
               Text(
                 'Segundo número',
@@ -133,6 +134,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
               TextField(
                   textAlign: TextAlign.center,
                   controller: _inputControllerNum2,
+                  keyboardType: TextInputType.number,
                   style: TextStyle(fontSize: 16)),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
