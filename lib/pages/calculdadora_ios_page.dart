@@ -14,7 +14,7 @@ class CalculadoraIOSPage extends StatefulWidget {
 
 class _CalculadoraIOSPage extends State<CalculadoraIOSPage> {
   late double _num, _num2 = 0;
-  String _resultado = '';
+  late String _resultado, _valorCalculo = '';
 
 
 
@@ -22,6 +22,14 @@ class _CalculadoraIOSPage extends State<CalculadoraIOSPage> {
   final _inputControllerNum2 = TextEditingController();
 
   List<String> _list =[];
+
+  void _addValor(valor){
+    _valorCalculo += valor;
+
+    setState(() {
+      _valorCalculo = _valorCalculo;
+    });
+  }
 
   void _setList() {
     _list.add(_resultado);
@@ -33,56 +41,62 @@ class _CalculadoraIOSPage extends State<CalculadoraIOSPage> {
     });
   }
 
-  void _limpaLista() {
-    _list.clear();
+  void _limpaValor() {
+    _valorCalculo = '';
 
     setState(() {
-      _list = _list;
+      _valorCalculo = _valorCalculo;
     });
   }
 
-  void _diminuir(){
+  void _calculoValor(){
 
-    _num = double.parse(_inputControllerNum.text);
-    _num2 = double.parse(_inputControllerNum2.text);
+    List<String> valores = [];
+    List<String> caracteres = [];
 
-    double resultadoDim = _num - _num2;
-    _resultado = resultadoDim.toString();
+    _valorCalculo.split('').forEach((valor) => {
+      if(valor == 'x' || valor == '+' || valor == '/' || valor == '-'){
+        caracteres.add(valor)
+      } else {
+        valores.add(valor)
+      }
+    });
 
-    _setList();
-  }
+    double total = 0;
 
-  void _somar(){
+    for(int i = 0; i <= valores.length; i++){
 
-    _num = double.parse(_inputControllerNum.text);
-    _num2 = double.parse(_inputControllerNum2.text);
-
-    double resultadoSoma = _num + _num2;
-    _resultado = resultadoSoma.toString();
-
-    _setList();
-  }
-
-  void _multiplicar(){
-
-    _num = double.parse(_inputControllerNum.text);
-    _num2 = double.parse(_inputControllerNum2.text);
-
-    double resultadoSoma = _num * _num2;
-    _resultado = resultadoSoma.toString();
-
-    _setList();
-  }
-
-  void _dividir(){
-
-    _num = double.parse(_inputControllerNum.text);
-    _num2 = double.parse(_inputControllerNum2.text);
-
-    double resultadoSoma = _num / _num2;
-    _resultado = resultadoSoma.toString();
-
-    _setList();
+      if(i==0){
+        double v1 = double.parse(valores[0]);
+        double v2 = double.parse(valores[1]);
+        switch (caracteres[0]){
+          case '+': {
+            total = v1 + v2;
+            break;
+          }
+          case '-': {
+            total = v1 - v2;
+            break;
+          }
+          case 'x': {
+            total = v1 * v2;
+            break;
+          }
+          case '/': {
+            total = v1 / v2;
+            break;
+          }
+          default:{
+            total: total;
+            break;
+          }
+        }
+      }
+    }
+    setState(() {
+      _valorCalculo = '';
+      _valorCalculo = total.toString();
+    });
   }
 
   @override
@@ -97,99 +111,172 @@ class _CalculadoraIOSPage extends State<CalculadoraIOSPage> {
               Icons.restart_alt,
               color: Colors.white,
             ),
-            onPressed: _limpaLista,
+            onPressed: _limpaValor,
           )
         ],
       ),
       drawer: Menu(context),
       body: SingleChildScrollView(
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+
             children: <Widget>[
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.calculate_outlined,
-                      size: 150,
-                      color: Colors.blue,
-                    ),
-                  ]),
-              Text(
-                'Primeiro número',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                  textAlign: TextAlign.center,
-                  controller: _inputControllerNum,
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(fontSize: 16)),
-              Text(
-                'Segundo número',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                  textAlign: TextAlign.center,
-                  controller: _inputControllerNum2,
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(fontSize: 16)),
+              Container(
+                  child: Padding(
+                    padding:  EdgeInsets.all(16.0),
+                    child:  Text('${_valorCalculo}', style: TextStyle(color: Colors.black, fontSize: 50.0),),
+              )) ,
+
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.add,
-                        size: 30,
-                        color: Colors.blue,),
-                      tooltip: 'Mais',
-                      onPressed: () {
-                        setState(() {
-                          _somar();
-                        });
+                    TextButton(
+                      onPressed: (){
+                        _limpaValor();
                       },
+                      child: Text('Apagar', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.remove,
-                        size: 30,
-                        color: Colors.blue,),
-                      tooltip: 'Menos',
-                      onPressed: () {
-                        setState(() {
-                          _diminuir();
-                        });
-                      },
+                    TextButton(
+                      onPressed: null,
+                      child: Text(' ', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
                     ),
-                    IconButton(
-                      icon: Text("*",
-                          style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
-                      tooltip: 'Vezes',
-                      onPressed: () {
-                        setState(() {
-                          _multiplicar();
-                        });
-                      },
+                    TextButton(
+                      onPressed: null,
+                      child: Text('%', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
                     ),
-                    IconButton(
-                      icon: Text("/",
-                          style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
-                      tooltip: 'Divisao',
+                    TextButton(
                       onPressed: () {
+                        _addValor('/');
                         setState(() {
-                          _dividir();
+
                         });
                       },
+                      child: Text('/', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
                     ),
                   ]),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '$_resultado',
-                      style: TextStyle(fontSize: 30),
+                    TextButton(
+                      onPressed: () {
+                        _addValor('7');
+                      },
+                      child: Text('7', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _addValor('8');
+                        },
+                      child: Text('8', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('9');
+                      },
+                      child: Text('9', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _addValor('x');
+                        setState(() {
+
+                        });
+                      },
+                      child: Text('x', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('4');
+                      },
+                      child: Text('4', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('5');
+                      },
+                      child: Text('5', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('6');
+                      },
+                      child: Text('6', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _addValor('-');
+                        setState(() {
+
+                        });
+                      },
+                      child: Text('-', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('1');
+                      },
+                      child: Text('1', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('2');
+                      },
+                      child: Text('2', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('3');
+                      },
+                      child: Text('3', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _addValor('+');
+                        setState(() {
+
+                        });
+                      },
+                      child: Text('+', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
+                    ),
+                  ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('0');
+                      },
+                      child: Text('0', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed:  () {
+                        _addValor('0');
+                      },
+                      child: Text('0', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed: null,
+                      child: Text('.', style: TextStyle(fontSize: 30, color: Colors.blue, fontWeight: FontWeight.bold)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _calculoValor();
+                        });
+                      },
+                      child: Text('=', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
                     ),
                   ]),
               SizedBox(
