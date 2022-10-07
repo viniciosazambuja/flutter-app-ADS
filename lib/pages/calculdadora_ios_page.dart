@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -53,46 +52,88 @@ class _CalculadoraIOSPage extends State<CalculadoraIOSPage> {
 
     List<String> valores = [];
     List<String> caracteres = [];
+    String aux = '';
 
     _valorCalculo.split('').forEach((valor) => {
       if(valor == 'x' || valor == '+' || valor == '/' || valor == '-'){
-        caracteres.add(valor)
+        valores.add(aux),
+        caracteres.add(valor),
+        aux = ''
       } else {
-        valores.add(valor)
+        aux += valor
       }
     });
+    valores.add(aux);
 
     double total = 0;
-
-    for(int i = 0; i <= valores.length; i++){
-
-      if(i==0){
+    int z = 0;
+      for (int i = 1; i <= valores.length; i++) {
+      if (i == 1) {
         double v1 = double.parse(valores[0]);
         double v2 = double.parse(valores[1]);
-        switch (caracteres[0]){
-          case '+': {
-            total = v1 + v2;
-            break;
-          }
-          case '-': {
-            total = v1 - v2;
-            break;
-          }
-          case 'x': {
-            total = v1 * v2;
-            break;
-          }
-          case '/': {
-            total = v1 / v2;
-            break;
-          }
-          default:{
-            total: total;
-            break;
-          }
+        switch (caracteres[0]) {
+          case '+':
+            {
+              total = v1 + v2;
+              break;
+            }
+          case '-':
+            {
+              total = v1 - v2;
+              break;
+            }
+          case 'x':
+            {
+              total = v1 * v2;
+              break;
+            }
+          case '/':
+            {
+              total = v1 / v2;
+              break;
+            }
+          default:
+            {
+              total: total;
+              break;
+            }
         }
+      } else if(z < caracteres.length - 1) {
+          z++;
+          double v1 = total;
+          double v2 = double.parse(valores[i]);
+          switch (caracteres[z]) {
+            case '+':
+              {
+                total = v1 + v2;
+                break;
+              }
+            case '-':
+              {
+                total = v1 - v2;
+                break;
+              }
+            case 'x':
+              {
+                total = v1 * v2;
+                break;
+              }
+            case '/':
+              {
+                total = v1 / v2;
+                break;
+              }
+            default:
+              {
+                total:
+                total;
+                break;
+              }
+          }
+        } else {
+        break;
       }
-    }
+      }
     setState(() {
       _valorCalculo = '';
       _valorCalculo = total.toString();
